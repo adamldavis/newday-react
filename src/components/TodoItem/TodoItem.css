@@ -1,0 +1,25 @@
+.todo .checkbox {
+    margin-right: 1vh;
+    box-sizing: border-box;
+    border: 1px solid black;
+    color: black;
+    height: 1.5em;
+    width: 1.5em;
+}
+.todo .unchecked {
+    color: transparent;
+}
+.todo span.checked {
+    text-decoration: line-through;
+}
+.dragging {
+    background-color: salmon;
+    opacity: 60%;
+}
+.over {
+    background-color: greenyellow;
+}
+
+.del {
+    float: right;
+}

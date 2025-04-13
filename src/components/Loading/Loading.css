@@ -1,0 +1,30 @@
+.loading {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 40vmin;
+    height: 40vmin;
+    margin-left: -20vmin;
+    margin-top: -20vmin;
+    pointer-events: none;
+    background-color: #ffffff33;
+  }
+  .loading img {
+    height: auto;
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .loading img {
+      animation: loading-spin infinite 20s linear;
+    }
+  }
+  
+  @keyframes loading-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  

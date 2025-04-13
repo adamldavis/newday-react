@@ -1,0 +1,19 @@
+.todo-list ul {
+    padding: 1em;
+    margin-left: 1em;
+    width: 100%;
+}
+.todo-list li {
+    list-style: circle;
+    padding: 1em;
+    border: 1px solid #eee;
+    text-align: left;
+}
+.todo-list {
+  height: 100%;
+  width: 100%;
+  background-color: #282c34;
+  color: white;
+  display: flex;
+  box-sizing: border-box;
+}
