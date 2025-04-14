@@ -13,8 +13,8 @@ function TodoList({ todos, dispatch }: Props) {
 
     // moves from index to index of item at given ID
     const moveItem = (fromIndex: number, id: string) => {
-        if (todos.length > 1) {
-            const toIndex = todos.findIndex((it) => it.id === id);
+        const toIndex = todos.findIndex((it) => it.id === id);
+        if (fromIndex >= 0 && toIndex >= 0) {
             const entity = todos[fromIndex];
             dispatch({type: 'move', payload: {entity, from: fromIndex, to: toIndex}});
         }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import TodoList from '../components/TodoList/TodoList';
 import Loading from '../components/Loading/Loading';
 import TodoAdder from '../components/TodoList/TodoAdder';
@@ -12,26 +12,23 @@ interface Props {
 
 function TodoPage({ initialTodos = [] }: Props) {
 
-  const [ isLoading, setIsLoading ] = useState(false);
-  const { data, dispatch } = useData(initialTodos);
-  
+  const { data, dispatch, isLoading } = useData(initialTodos);
+  const todos = data.todos ?? [];
+
   const addTodo = (text: string) => {
     if (!text) {
       return; // no text
     }
-    console.log(`adding ${text}`)
-    setIsLoading(true);
+    console.log(`adding ${text}`);
     const todo = { id: uuidv4(), text, checked: false, labels: [] };
     dispatch({type: 'add', payload: { type: 'save', id: todo.id, entity: todo }});
-    // simulates call to API
-    setTimeout(() => setIsLoading(false), 200);
   }
   return (
     <>
     <h1>To-do</h1>
     <h2>To-do list with drag & drop, delete, saved in localStorage</h2>
     <Loading show={isLoading} />
-    <TodoList todos={data.todos ?? []} dispatch={dispatch} />
+    <TodoList todos={todos} dispatch={dispatch} />
     <TodoAdder addTodo={addTodo} />
     </>
   );
