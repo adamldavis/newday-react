@@ -2,9 +2,15 @@
 
 Demo React To-Do app in TypeScript with drag and drop, custom hooks, undo/redo, and localStorage.
 
+Includes Storybook stories.
+
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `npm run storybook`
+
+Runs the Storybook UI.
 
 ### `npm start`
 

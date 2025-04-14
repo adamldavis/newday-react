@@ -16,9 +16,13 @@ function TodoPage({ initialTodos = [] }: Props) {
   const { data, dispatch } = useData(initialTodos);
   
   const addTodo = (text: string) => {
+    if (!text) {
+      return; // no text
+    }
     console.log(`adding ${text}`)
     setIsLoading(true);
-    dispatch({type: 'add', payload: { id: uuidv4(), text, checked: false, labels: [] }});
+    const todo = { id: uuidv4(), text, checked: false, labels: [] };
+    dispatch({type: 'add', payload: { type: 'save', id: todo.id, entity: todo }});
     // simulates call to API
     setTimeout(() => setIsLoading(false), 200);
   }

@@ -73,7 +73,7 @@ export default function TodoItem({ id, text, index, moveItem, modifyItem, delete
             <span className={`${checkedState ? "checked" : ""}`}>{text}</span>
             <span className='del'>
                 <Button 
-                    backgroundColor='gray' 
+                    backgroundColor='lightgray' 
                     label="Delete" size='small' 
                     primary={false} onClick={deleteItem} img={deleteImage} />
             </span>

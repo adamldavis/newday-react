@@ -13,7 +13,7 @@ export default {
     },
     args: {
         todos: [],
-        todoService: { modify: fn(), remove: fn(), save: fn(), saveAll: fn() },
+        dispatch: fn(),
     },
 } satisfies Meta<typeof TodoList>;
 

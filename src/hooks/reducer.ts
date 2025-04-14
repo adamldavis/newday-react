@@ -1,14 +1,39 @@
-import { DeleteAction, SaveAction, MoveAction, ModifyAction, Data, DataActor, Entity } from "../api/types";
+import { DeleteAction, SaveAction, MoveAction, ModifyAction, Data, DataActor, Entity, Action } from "../api/types";
 import ArrayUtil from "../util/ArrayUtil";
 import TypeUtil from "../util/TypeUtil";
 
-type ActionType = 'add' | 'edit' | 'remove' | 'reset' | 'undo' | 'redo' | 'set';
-
-// TODO make types for every action
-interface ReducerAction {
-    payload: any;
-    type: ActionType;
+interface ReducerActionAdd {
+    type: 'add';
+    payload: SaveAction;
 }
+interface ReducerActionEdit {
+    type: 'edit'
+    payload: ModifyAction
+}
+interface ReducterActionMove {
+    type: 'move'
+    payload: MoveAction
+}
+interface ReducerActionDelete {
+    type: 'delete'
+    payload: DeleteAction
+}
+interface ReducerActionReset {
+    type: 'reset'
+}
+interface ReducerActionSet {
+    type: 'set'
+    payload: Data
+}
+interface ReducerActionUndo {
+    type: 'undo'
+}
+interface ReducerActionRedo {
+    type: 'redo'
+}
+type ReducerAction = ReducerActionDelete | ReducerActionEdit | ReducterActionMove |
+    ReducerActionAdd | ReducerActionSet | ReducerActionReset | ReducerActionUndo | ReducerActionRedo;
+
 export const initialState = {
     labels: [],
     todos: [],
@@ -16,32 +41,38 @@ export const initialState = {
     undoneActions: [],
 };
 export function reducer(state: Data, action: ReducerAction): Data {
-    let entity = null;
 
     switch (action.type) {
         // TODO add to actions array to implement undo/redo
         case 'add': 
-            entity = action.payload as Entity;
-            return add(entity)(state);
+            return addActionThen(action.payload, add(action.payload.entity), state);
         case 'edit':
-            const edit = action.payload as {from: Entity, to: Entity};
-            return modify(edit.from, edit.to)(state);
-        case 'remove':
-            entity = action.payload as Entity;
-            return deleteEntity(entity, entity.id)(state);
-
+            const edit = action.payload;
+            edit.type = 'modify';
+            return  addActionThen(action.payload, modify(edit.from, edit.to), state);
+        case 'delete':
+            const { entity, id } = action.payload;
+            action.payload.type = 'delete';
+            return  addActionThen(action.payload, deleteEntity(entity, id), state);
+        case 'move':
+            const act = action.payload;
+            act.type = 'move';
+            return  addActionThen(act, move(act.entity, act.from, act.to), state);
         case 'reset':
             return initialState;
         case 'set':
-            return action.payload as Data;
+            return action.payload;
 
         case 'undo':
             return undo()(state);
         case 'redo':
             return redo()(state);
-        default: 
-            throw new Error("Unmatched action type " + action.type);
     }
+}
+/** Adds the action to "Actions" array then executes DataActor and returns */
+function addActionThen(action: Action, actor: DataActor, data: Data): Data {
+    data.actions?.push(action);
+    return actor(data);
 }
 
 /** Executes the Reversal of the Action */
@@ -74,9 +105,9 @@ function undoDelete(action: DeleteAction): DataActor {
 // adds an entity to the proper list
 function add(entity: any, index?: number): DataActor {
     if (TypeUtil.isTodo(entity)) {
-        return addTo(it, 'todos', index ?? 0);
+        return addTo(entity, 'todos', index ?? 0);
     } else if (TypeUtil.isLabel(entity)) {
-        return addTo(it, 'labels', index ?? 0);
+        return addTo(entity, 'labels', index ?? 0);
     }
     return (d: Data) => d;
 }
@@ -103,11 +134,13 @@ function undoSave(action: SaveAction): DataActor {
 function deleteEntity(entity: any, id: string): DataActor {
     if (TypeUtil.isTodo(entity)) {
         return (data: Data) => {
+            console.log(`Deleting todo id=${id}`);
             data.todos = data.todos?.filter(it => it.id !== id);
             return data;
         };
     } else if (TypeUtil.isLabel(entity)) {
         return (data: Data) => {
+            console.log(`Deleting label id=${id}`);
             data.labels = data.labels?.filter(it => it.id !== id);
             return data;
         };
@@ -143,7 +176,7 @@ function undoModify(action: ModifyAction): DataActor {
     return modify(action.to, action.from);
 }
 
-// modify is just remove then re-add
+// modify is just delete then re-add
 function modify(from: Entity, to: Entity): DataActor {
     if (TypeUtil.isTodo(to) && TypeUtil.isTodo(from)) {
         return (data: Data) => {
