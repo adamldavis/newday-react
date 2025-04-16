@@ -19,6 +19,8 @@ export default {
         deleteItem: fn(),
         index: 0,
         id: '123',
+        overId: null,
+        setOver: fn(),
     },
 } satisfies Meta<typeof TodoItem>;
 

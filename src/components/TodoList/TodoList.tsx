@@ -1,4 +1,9 @@
-import React, { DragEvent, DragEventHandler, ReactElement } from "react";
+import React, {
+  DragEvent,
+  DragEventHandler,
+  ReactElement,
+  useState,
+} from "react";
 import TodoItem from "../TodoItem/TodoItem";
 import { Todo } from "../../api/types";
 import { ReducerAction } from "../../hooks/reducer";
@@ -50,16 +55,24 @@ function TodoList({ todos, dispatch }: Props) {
         payload: { type: "edit", from: entity, to: todo },
       });
   };
+  const [overId, setOverId] = useState<string | null>(null);
   const items: ReactElement[] = todos.map((it, i) => (
     <TodoItem
       key={it.id}
       id={it.id}
       text={it.text}
       index={i}
-      moveItem={moveItem}
+      moveItem={(from: number, id: string) => {
+        setOverId(null);
+        moveItem(from, id);
+      }}
       deleteItem={() => deleteItem(it.id)}
       modifyItem={modifyItem}
       checked={it.checked}
+      overId={overId}
+      setOver={(over: boolean) => {
+        if (over) setOverId(it.id);
+      }}
     />
   ));
 

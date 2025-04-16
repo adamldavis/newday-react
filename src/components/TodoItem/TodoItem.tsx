@@ -18,6 +18,8 @@ interface Props {
   deleteItem: () => void;
   index: number;
   checked: boolean;
+  overId: string | null;
+  setOver: (over: boolean) => void;
 }
 
 export default function TodoItem({
@@ -28,10 +30,12 @@ export default function TodoItem({
   modifyItem,
   deleteItem,
   checked,
+  overId,
+  setOver,
 }: Props) {
+  const isOver = overId === id;
   const [checkedState, setCheckedState] = useState(checked);
   const [dragging, setDragging] = useState(false);
-  const [isOver, setOver] = useState(false);
 
   useEffect(() => {
     console.log(`${id} check state=${checkedState}`);
@@ -50,20 +54,14 @@ export default function TodoItem({
   };
   const onDragEnd: DragEventHandler = (e) => {
     e.preventDefault();
-    // get element from x, y
-    const element = document.elementFromPoint(e.pageX, e.pageY);
-    const otherId = element?.getAttribute("id");
-    console.log(`other=${otherId}`);
-    if (otherId) moveItem(index, otherId);
+    // use currently dragged over element's id
+    console.log(`other=${overId}`);
+    if (overId) moveItem(index, overId);
     setDragging(false);
   };
 
   const onDragCapture: DragEventHandler = (event) => {
-    // Array.from(document.getElementsByClassName('dragging')).forEach(e => {
-    //     e.setAttribute('position', 'absolute');
-    //     e.setAttribute('left', `${event.pageX}px`);
-    //     e.setAttribute('top', `${event.pageY}px`);
-    // });
+    // TODO animate drag
   };
 
   return (
@@ -77,10 +75,8 @@ export default function TodoItem({
       }
       onDragEnd={onDragEnd}
       onDragCapture={onDragCapture}
-      onDragEnter={(e) => {
-        setOver(true);
-      }}
-      onDragLeave={(e) => setOver(false)}
+      onDragEnter={() => setOver(true)}
+      onDragLeave={() => setOver(false)}
       onDragStart={onDrag}
     >
       <button
