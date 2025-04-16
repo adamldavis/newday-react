@@ -11,6 +11,11 @@ class ArrayUtil {
         const [ element, arr ] = ArrayUtil.remove(array, fromIndex);
         return ArrayUtil.insert(arr, element, toIndex);
     }
+    /** Moves an element from one index to another */
+    static moveElement<T>(array: T[], from: number, to: number) {
+        const [ element, arrayCopy ] = this.remove(array, from);
+        return this.insert(arrayCopy, element, to);
+    }
     /** Swaps two elements in an array, and returns result as a new array. */
     static swap<T>(array: T[], fromIndex: number, toIndex: number): T[] {
         let copy: T[] = [...array];

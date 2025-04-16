@@ -33,7 +33,7 @@ export interface MoveAction {
     to: number;
 }
 export interface ModifyAction {
-    type: 'modify';
+    type: 'edit';
     from: Entity;
     to: Entity;
 }

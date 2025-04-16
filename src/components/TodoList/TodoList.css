@@ -4,7 +4,7 @@
     width: 100%;
 }
 .todo-list li {
-    list-style: circle;
+    list-style: none;
     padding: 1em;
     border: 1px solid #eee;
     text-align: left;

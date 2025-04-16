@@ -1,3 +1,5 @@
 .text {
-    max-width: 80%;
+    max-width: 800px;
+    min-width: 300px;
+    margin-left: 32px;
 }
