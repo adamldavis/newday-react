@@ -7,6 +7,9 @@
   line-height: 1;
   font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+.newday-button:disabled {
+  cursor: not-allowed;
+}
 .newday-button img {
     height: 12px;
     top: 2px;
